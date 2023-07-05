@@ -567,6 +567,31 @@ func (m *Machine) Eval(expr program.Expr) (internal.Value, error) {
 			return nil, err
 		}
 		return (*lhs).Sub(*rhs), nil
+
+	case program.ExprNumberCondition:
+		lhs, err := EvalAs[internal.Number](m, expr.Lhs)
+		if err != nil {
+			return nil, err
+		}
+		rhs, err := EvalAs[internal.Number](m, expr.Rhs)
+		if err != nil {
+			return nil, err
+		}
+		switch expr.Op {
+		case program.OP_EQ:
+			return internal.Bool((*lhs).Eq(*rhs)), nil
+		case program.OP_NEQ:
+			return internal.Bool(!(*lhs).Eq(*rhs)), nil
+		case program.OP_LT:
+			return internal.Bool((*lhs).Lt(*rhs)), nil
+		case program.OP_LTE:
+			return internal.Bool((*lhs).Lte(*rhs)), nil
+		case program.OP_GT:
+			return internal.Bool((*lhs).Gt(*rhs)), nil
+		case program.OP_GTE:
+			return internal.Bool((*lhs).Gte(*rhs)), nil
+		}
+
 	case program.ExprMonetaryAdd:
 		lhs, err := EvalAs[internal.Monetary](m, expr.Lhs)
 		if err != nil {

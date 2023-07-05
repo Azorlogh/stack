@@ -81,6 +81,18 @@ func (s *BaseNumScriptListener) EnterExprTernary(ctx *ExprTernaryContext) {}
 // ExitExprTernary is called when production ExprTernary is exited.
 func (s *BaseNumScriptListener) ExitExprTernary(ctx *ExprTernaryContext) {}
 
+// EnterExprArithmeticCondition is called when production ExprArithmeticCondition is entered.
+func (s *BaseNumScriptListener) EnterExprArithmeticCondition(ctx *ExprArithmeticConditionContext) {}
+
+// ExitExprArithmeticCondition is called when production ExprArithmeticCondition is exited.
+func (s *BaseNumScriptListener) ExitExprArithmeticCondition(ctx *ExprArithmeticConditionContext) {}
+
+// EnterExprBoolCondition is called when production ExprBoolCondition is entered.
+func (s *BaseNumScriptListener) EnterExprBoolCondition(ctx *ExprBoolConditionContext) {}
+
+// ExitExprBoolCondition is called when production ExprBoolCondition is exited.
+func (s *BaseNumScriptListener) ExitExprBoolCondition(ctx *ExprBoolConditionContext) {}
+
 // EnterExprLiteral is called when production ExprLiteral is entered.
 func (s *BaseNumScriptListener) EnterExprLiteral(ctx *ExprLiteralContext) {}
 

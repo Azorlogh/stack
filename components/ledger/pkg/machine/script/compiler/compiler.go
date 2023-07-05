@@ -85,6 +85,43 @@ func (p *parseVisitor) CompileExpr(c parser.IExpressionContext) (internal.Type, 
 		default:
 			return 0, nil, LogicError(c, errors.New("tried to do arithmetic with wrong type"))
 		}
+	case *parser.ExprArithmeticConditionContext:
+		lhsType, lhs, err := p.CompileExpr(c.GetLhs())
+		if err != nil {
+			return 0, nil, err
+		}
+		switch lhsType {
+		case internal.TypeNumber:
+			rhs, err := p.CompileExprTy(c.GetRhs(), internal.TypeNumber)
+			if err != nil {
+				return 0, nil, err
+			}
+			expr := program.ExprNumberCondition{
+				Lhs: lhs,
+				Rhs: rhs,
+			}
+
+			switch c.GetOp().GetTokenType() {
+			case parser.NumScriptLexerEQ:
+				expr.Op = program.OP_EQ
+			case parser.NumScriptLexerNEQ:
+				expr.Op = program.OP_NEQ
+			case parser.NumScriptLexerLT:
+				expr.Op = program.OP_LT
+			case parser.NumScriptLexerLTE:
+				expr.Op = program.OP_LTE
+			case parser.NumScriptLexerGT:
+				expr.Op = program.OP_GT
+			case parser.NumScriptLexerGTE:
+				expr.Op = program.OP_GTE
+			}
+			return internal.TypeBool, expr, nil
+		// case internal.TypeMonetary: TODO
+		default:
+			return 0, nil, LogicError(c, errors.New("tried to do arithmetic with wrong type"))
+		}
+	// case *parser.ExprBoolConditionContext:
+
 	case *parser.ExprLiteralContext:
 		ty, value, err := p.CompileLit(c.GetLit())
 		if err != nil {

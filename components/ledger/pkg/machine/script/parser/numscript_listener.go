@@ -38,6 +38,12 @@ type NumScriptListener interface {
 	// EnterExprTernary is called when entering the ExprTernary production.
 	EnterExprTernary(c *ExprTernaryContext)
 
+	// EnterExprArithmeticCondition is called when entering the ExprArithmeticCondition production.
+	EnterExprArithmeticCondition(c *ExprArithmeticConditionContext)
+
+	// EnterExprBoolCondition is called when entering the ExprBoolCondition production.
+	EnterExprBoolCondition(c *ExprBoolConditionContext)
+
 	// EnterExprLiteral is called when entering the ExprLiteral production.
 	EnterExprLiteral(c *ExprLiteralContext)
 
@@ -178,6 +184,12 @@ type NumScriptListener interface {
 
 	// ExitExprTernary is called when exiting the ExprTernary production.
 	ExitExprTernary(c *ExprTernaryContext)
+
+	// ExitExprArithmeticCondition is called when exiting the ExprArithmeticCondition production.
+	ExitExprArithmeticCondition(c *ExprArithmeticConditionContext)
+
+	// ExitExprBoolCondition is called when exiting the ExprBoolCondition production.
+	ExitExprBoolCondition(c *ExprBoolConditionContext)
 
 	// ExitExprLiteral is called when exiting the ExprLiteral production.
 	ExitExprLiteral(c *ExprLiteralContext)

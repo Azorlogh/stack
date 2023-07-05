@@ -27,6 +27,16 @@ RBRACK: ']';
 LBRACE: '{';
 RBRACE: '}';
 EQ: '=';
+NEQ: '!=';
+LT: '<';
+LTE: '<=';
+GT: '>';
+GTE: '>=';
+
+OP_AND: '&&';
+OP_OR: '||';
+OP_NOT: '!';
+
 TY_ACCOUNT: 'account';
 TY_ASSET: 'asset';
 TY_NUMBER: 'number';
@@ -64,7 +74,9 @@ literal
 variable: VARIABLE_NAME;
 
 expression
-    : lhs=expression op=(OP_ADD|OP_SUB) rhs=expression # ExprAddSub
+    : lhs=expression op=(OP_ADD | OP_SUB) rhs=expression # ExprAddSub
+    | lhs=expression op=(EQ | LT | LTE | GT | GTE) rhs=expression # ExprArithmeticCondition
+    | lhs=expression op=(OP_NOT | OP_AND | OP_OR) rhs=expression # ExprBoolCondition
     | lit=literal # ExprLiteral
     | var_=variable # ExprVariable
     | mon=monetary # ExprMonetaryNew

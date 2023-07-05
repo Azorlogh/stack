@@ -81,23 +81,29 @@ func (s *BaseNumScriptListener) EnterExprTernary(ctx *ExprTernaryContext) {}
 // ExitExprTernary is called when production ExprTernary is exited.
 func (s *BaseNumScriptListener) ExitExprTernary(ctx *ExprTernaryContext) {}
 
+// EnterExprLogicalNot is called when production ExprLogicalNot is entered.
+func (s *BaseNumScriptListener) EnterExprLogicalNot(ctx *ExprLogicalNotContext) {}
+
+// ExitExprLogicalNot is called when production ExprLogicalNot is exited.
+func (s *BaseNumScriptListener) ExitExprLogicalNot(ctx *ExprLogicalNotContext) {}
+
 // EnterExprArithmeticCondition is called when production ExprArithmeticCondition is entered.
 func (s *BaseNumScriptListener) EnterExprArithmeticCondition(ctx *ExprArithmeticConditionContext) {}
 
 // ExitExprArithmeticCondition is called when production ExprArithmeticCondition is exited.
 func (s *BaseNumScriptListener) ExitExprArithmeticCondition(ctx *ExprArithmeticConditionContext) {}
 
-// EnterExprBoolCondition is called when production ExprBoolCondition is entered.
-func (s *BaseNumScriptListener) EnterExprBoolCondition(ctx *ExprBoolConditionContext) {}
-
-// ExitExprBoolCondition is called when production ExprBoolCondition is exited.
-func (s *BaseNumScriptListener) ExitExprBoolCondition(ctx *ExprBoolConditionContext) {}
-
 // EnterExprLiteral is called when production ExprLiteral is entered.
 func (s *BaseNumScriptListener) EnterExprLiteral(ctx *ExprLiteralContext) {}
 
 // ExitExprLiteral is called when production ExprLiteral is exited.
 func (s *BaseNumScriptListener) ExitExprLiteral(ctx *ExprLiteralContext) {}
+
+// EnterExprLogicalOr is called when production ExprLogicalOr is entered.
+func (s *BaseNumScriptListener) EnterExprLogicalOr(ctx *ExprLogicalOrContext) {}
+
+// ExitExprLogicalOr is called when production ExprLogicalOr is exited.
+func (s *BaseNumScriptListener) ExitExprLogicalOr(ctx *ExprLogicalOrContext) {}
 
 // EnterExprVariable is called when production ExprVariable is entered.
 func (s *BaseNumScriptListener) EnterExprVariable(ctx *ExprVariableContext) {}
@@ -110,6 +116,18 @@ func (s *BaseNumScriptListener) EnterExprMonetaryNew(ctx *ExprMonetaryNewContext
 
 // ExitExprMonetaryNew is called when production ExprMonetaryNew is exited.
 func (s *BaseNumScriptListener) ExitExprMonetaryNew(ctx *ExprMonetaryNewContext) {}
+
+// EnterExprEnclosed is called when production ExprEnclosed is entered.
+func (s *BaseNumScriptListener) EnterExprEnclosed(ctx *ExprEnclosedContext) {}
+
+// ExitExprEnclosed is called when production ExprEnclosed is exited.
+func (s *BaseNumScriptListener) ExitExprEnclosed(ctx *ExprEnclosedContext) {}
+
+// EnterExprLogicalAnd is called when production ExprLogicalAnd is entered.
+func (s *BaseNumScriptListener) EnterExprLogicalAnd(ctx *ExprLogicalAndContext) {}
+
+// ExitExprLogicalAnd is called when production ExprLogicalAnd is exited.
+func (s *BaseNumScriptListener) ExitExprLogicalAnd(ctx *ExprLogicalAndContext) {}
 
 // EnterAllotmentPortionConst is called when production AllotmentPortionConst is entered.
 func (s *BaseNumScriptListener) EnterAllotmentPortionConst(ctx *AllotmentPortionConstContext) {}

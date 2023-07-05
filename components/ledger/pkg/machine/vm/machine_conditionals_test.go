@@ -1,6 +1,8 @@
 package vm
 
 import (
+	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/formancehq/ledger/pkg/machine/internal"
@@ -57,10 +59,12 @@ func TestInequality(t *testing.T) {
 		number $foo
 		number $bar
 	}
-	print $foo > $bar ? @istrue : @isfalse
+	print $foo > $bar && !($foo == $bar) ? @istrue : @isfalse
 	`
 	tc := NewTestCase()
 	tc.compile(t, script)
+	b, _ := json.MarshalIndent(tc.program, "", "\t")
+	fmt.Printf("%v\n", string(b))
 	tc.setVarsFromJSON(t, `{
 		"foo": "42",
 		"bar": "30"

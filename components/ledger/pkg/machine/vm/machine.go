@@ -592,6 +592,33 @@ func (m *Machine) Eval(expr program.Expr) (internal.Value, error) {
 			return internal.Bool((*lhs).Gte(*rhs)), nil
 		}
 
+	case program.ExprLogicalNot:
+		operand, err := EvalAs[internal.Bool](m, expr.Operand)
+		if err != nil {
+			return nil, err
+		}
+		return internal.Bool(!bool(*operand)), nil
+	case program.ExprLogicalAnd:
+		lhs, err := EvalAs[internal.Bool](m, expr.Lhs)
+		if err != nil {
+			return nil, err
+		}
+		rhs, err := EvalAs[internal.Bool](m, expr.Rhs)
+		if err != nil {
+			return nil, err
+		}
+		return internal.Bool(bool(*lhs) && bool(*rhs)), nil
+	case program.ExprLogicalOr:
+		lhs, err := EvalAs[internal.Bool](m, expr.Lhs)
+		if err != nil {
+			return nil, err
+		}
+		rhs, err := EvalAs[internal.Bool](m, expr.Rhs)
+		if err != nil {
+			return nil, err
+		}
+		return internal.Bool(bool(*lhs) || bool(*rhs)), nil
+
 	case program.ExprMonetaryAdd:
 		lhs, err := EvalAs[internal.Monetary](m, expr.Lhs)
 		if err != nil {

@@ -11,6 +11,9 @@ const (
 	OP_LTE
 	OP_GT
 	OP_GTE
+	OP_NOT
+	OP_AND
+	OP_OR
 )
 
 type Expr interface {
@@ -63,12 +66,23 @@ type ExprNumberCondition struct {
 
 func (e ExprNumberCondition) isExpr() {}
 
-// type ExprNumberSub struct {
-// 	Lhs Expr
-// 	Rhs Expr
-// }
+// Logical operations
 
-// func (e ExprNumberSub) isExpr() {}
+type ExprLogicalNot struct {
+	Operand Expr
+}
+type ExprLogicalAnd struct {
+	Lhs Expr
+	Rhs Expr
+}
+type ExprLogicalOr struct {
+	Lhs Expr
+	Rhs Expr
+}
+
+func (e ExprLogicalNot) isExpr() {}
+func (e ExprLogicalAnd) isExpr() {}
+func (e ExprLogicalOr) isExpr()  {}
 
 // Other
 

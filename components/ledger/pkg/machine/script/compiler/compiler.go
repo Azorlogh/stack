@@ -100,27 +100,67 @@ func (p *parseVisitor) CompileExpr(c parser.IExpressionContext) (internal.Type, 
 				Lhs: lhs,
 				Rhs: rhs,
 			}
-
 			switch c.GetOp().GetTokenType() {
-			case parser.NumScriptLexerEQ:
+			case parser.NumScriptLexerOP_EQ:
 				expr.Op = program.OP_EQ
-			case parser.NumScriptLexerNEQ:
+			case parser.NumScriptLexerOP_NEQ:
 				expr.Op = program.OP_NEQ
-			case parser.NumScriptLexerLT:
+			case parser.NumScriptLexerOP_LT:
 				expr.Op = program.OP_LT
-			case parser.NumScriptLexerLTE:
+			case parser.NumScriptLexerOP_LTE:
 				expr.Op = program.OP_LTE
-			case parser.NumScriptLexerGT:
+			case parser.NumScriptLexerOP_GT:
 				expr.Op = program.OP_GT
-			case parser.NumScriptLexerGTE:
+			case parser.NumScriptLexerOP_GTE:
 				expr.Op = program.OP_GTE
+			default:
+				return 0, nil, InternalError(c)
 			}
 			return internal.TypeBool, expr, nil
 		// case internal.TypeMonetary: TODO
 		default:
 			return 0, nil, LogicError(c, errors.New("tried to do arithmetic with wrong type"))
 		}
-	// case *parser.ExprBoolConditionContext:
+
+	case *parser.ExprLogicalNotContext:
+		operand, err := p.CompileExprTy(c.GetLhs(), internal.TypeBool)
+		if err != nil {
+			return 0, nil, err
+		}
+		expr := program.ExprLogicalNot{
+			Operand: operand,
+		}
+		return internal.TypeBool, expr, nil
+
+	case *parser.ExprLogicalAndContext:
+		lhs, err := p.CompileExprTy(c.GetLhs(), internal.TypeBool)
+		if err != nil {
+			return 0, nil, err
+		}
+		rhs, err := p.CompileExprTy(c.GetRhs(), internal.TypeBool)
+		if err != nil {
+			return 0, nil, err
+		}
+		expr := program.ExprLogicalAnd{
+			Lhs: lhs,
+			Rhs: rhs,
+		}
+		return internal.TypeBool, expr, nil
+
+	case *parser.ExprLogicalOrContext:
+		lhs, err := p.CompileExprTy(c.GetLhs(), internal.TypeBool)
+		if err != nil {
+			return 0, nil, err
+		}
+		rhs, err := p.CompileExprTy(c.GetRhs(), internal.TypeBool)
+		if err != nil {
+			return 0, nil, err
+		}
+		expr := program.ExprLogicalOr{
+			Lhs: lhs,
+			Rhs: rhs,
+		}
+		return internal.TypeBool, expr, nil
 
 	case *parser.ExprLiteralContext:
 		ty, value, err := p.CompileLit(c.GetLit())
@@ -169,6 +209,9 @@ func (p *parseVisitor) CompileExpr(c parser.IExpressionContext) (internal.Type, 
 			IfTrue:  exprIfTrue,
 			IfFalse: exprIfFalse,
 		}, nil
+
+	case *parser.ExprEnclosedContext:
+		return p.CompileExpr(c.GetExpr())
 
 	default:
 		return 0, nil, InternalError(c)

@@ -3,6 +3,7 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -57,6 +58,12 @@ func NewValueFromString(typ Type, data string) (Value, error) {
 		value = *res
 	case TypeString:
 		value = String(data)
+	case TypeBool:
+		res, err := strconv.ParseBool(data)
+		if err != nil {
+			return nil, err
+		}
+		value = Bool(res)
 	default:
 		return nil, fmt.Errorf("invalid type '%v'", typ)
 	}
@@ -79,6 +86,8 @@ func NewStringFromValue(value Value) (string, error) {
 		return fmt.Sprintf("%s %s", m.Asset, m.Amount), nil
 	case TypePortion:
 		return value.(Portion).String(), nil
+	case TypeBool:
+		return value.(Bool).String(), nil
 	default:
 		return "", fmt.Errorf("invalid type '%v'", value.GetType())
 	}

@@ -33,6 +33,7 @@ TY_NUMBER: 'number';
 TY_MONETARY: 'monetary';
 TY_PORTION: 'portion';
 TY_STRING: 'string';
+TY_BOOL: 'bool';
 STRING: '"' [a-zA-Z0-9_\- ]* '"';
 PORTION:
     ( [0-9]+ [ ]? '/' [ ]? [0-9]+
@@ -67,6 +68,7 @@ expression
     | lit=literal # ExprLiteral
     | var_=variable # ExprVariable
     | mon=monetary # ExprMonetaryNew
+    | cond=expression '?' ifTrue=expression ':' ifFalse=expression # ExprTernary
     ;
 
 allotmentPortion
@@ -152,6 +154,7 @@ type_
     | TY_STRING
     | TY_MONETARY
     | TY_PORTION
+    | TY_BOOL
     ;
 
 origin

@@ -637,6 +637,16 @@ func (m *Machine) Eval(expr program.Expr) (internal.Value, error) {
 			panic("oops infinite money")
 		}
 		return *funding, nil
+	case program.ExprTernary:
+		cond, err := EvalAs[internal.Bool](m, expr.Cond)
+		if err != nil {
+			return nil, err
+		}
+		if bool(*cond) {
+			return m.Eval(expr.IfTrue)
+		} else {
+			return m.Eval(expr.IfFalse)
+		}
 	}
 	return nil, errors.New(InternalError)
 }

@@ -75,6 +75,12 @@ func (s *BaseNumScriptListener) EnterExprAddSub(ctx *ExprAddSubContext) {}
 // ExitExprAddSub is called when production ExprAddSub is exited.
 func (s *BaseNumScriptListener) ExitExprAddSub(ctx *ExprAddSubContext) {}
 
+// EnterExprTernary is called when production ExprTernary is entered.
+func (s *BaseNumScriptListener) EnterExprTernary(ctx *ExprTernaryContext) {}
+
+// ExitExprTernary is called when production ExprTernary is exited.
+func (s *BaseNumScriptListener) ExitExprTernary(ctx *ExprTernaryContext) {}
+
 // EnterExprLiteral is called when production ExprLiteral is entered.
 func (s *BaseNumScriptListener) EnterExprLiteral(ctx *ExprLiteralContext) {}
 

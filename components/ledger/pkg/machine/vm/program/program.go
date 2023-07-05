@@ -74,6 +74,14 @@ type ExprMonetaryNew struct {
 
 func (e ExprMonetaryNew) isExpr() {}
 
+type ExprTernary struct {
+	Cond    Expr
+	IfTrue  Expr
+	IfFalse Expr
+}
+
+func (e ExprTernary) isExpr() {}
+
 type Overdraft struct {
 	Unbounded bool
 	UpTo      *Expr // invariant: if unbounbed then up_to == nil

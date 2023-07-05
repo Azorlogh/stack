@@ -111,6 +111,28 @@ func (p *parseVisitor) CompileExpr(c parser.IExpressionContext) (internal.Type, 
 			Asset:  asset,
 			Amount: amt,
 		}, nil
+	case *parser.ExprTernaryContext:
+		cond, compErr := p.CompileExprTy(c.GetCond(), internal.TypeBool)
+		if compErr != nil {
+			return 0, nil, compErr
+		}
+		typeIfTrue, exprIfTrue, compErr := p.CompileExpr(c.GetIfTrue())
+		if compErr != nil {
+			return 0, nil, compErr
+		}
+		typeIfFalse, exprIfFalse, compErr := p.CompileExpr(c.GetIfFalse())
+		if compErr != nil {
+			return 0, nil, compErr
+		}
+		if typeIfTrue != typeIfFalse {
+			return 0, nil, LogicError(c, errors.New("mismatching types"))
+		}
+		return typeIfTrue, program.ExprTernary{
+			Cond:    cond,
+			IfTrue:  exprIfTrue,
+			IfFalse: exprIfFalse,
+		}, nil
+
 	default:
 		return 0, nil, InternalError(c)
 	}
@@ -283,6 +305,8 @@ func (p *parseVisitor) CompileVars(c *parser.VarListDeclContext) ([]program.VarD
 			ty = internal.TypeMonetary
 		case "portion":
 			ty = internal.TypePortion
+		case "bool":
+			ty = internal.TypeBool
 		default:
 			return nil, InternalError(c)
 		}

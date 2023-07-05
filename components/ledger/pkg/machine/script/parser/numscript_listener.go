@@ -35,6 +35,9 @@ type NumScriptListener interface {
 	// EnterExprAddSub is called when entering the ExprAddSub production.
 	EnterExprAddSub(c *ExprAddSubContext)
 
+	// EnterExprTernary is called when entering the ExprTernary production.
+	EnterExprTernary(c *ExprTernaryContext)
+
 	// EnterExprLiteral is called when entering the ExprLiteral production.
 	EnterExprLiteral(c *ExprLiteralContext)
 
@@ -172,6 +175,9 @@ type NumScriptListener interface {
 
 	// ExitExprAddSub is called when exiting the ExprAddSub production.
 	ExitExprAddSub(c *ExprAddSubContext)
+
+	// ExitExprTernary is called when exiting the ExprTernary production.
+	ExitExprTernary(c *ExprTernaryContext)
 
 	// ExitExprLiteral is called when exiting the ExprLiteral production.
 	ExitExprLiteral(c *ExprLiteralContext)

@@ -5,6 +5,15 @@ import "github.com/formancehq/ledger/pkg/machine/internal"
 const (
 	OP_ADD = byte(iota + 1)
 	OP_SUB
+	OP_EQ
+	OP_NEQ
+	OP_LT
+	OP_LTE
+	OP_GT
+	OP_GTE
+	OP_NOT
+	OP_AND
+	OP_OR
 )
 
 type Expr interface {
@@ -16,6 +25,8 @@ type ExprLiteral struct {
 }
 
 func (e ExprLiteral) isExpr() {}
+
+// Arithmetic
 
 type ExprNumberOperation struct {
 	Op  byte
@@ -32,6 +43,36 @@ type ExprMonetaryOperation struct {
 }
 
 func (e ExprMonetaryOperation) isExpr() {}
+
+// Conditionals
+
+type ExprNumberCondition struct {
+	Lhs Expr
+	Op  byte
+	Rhs Expr
+}
+
+func (e ExprNumberCondition) isExpr() {}
+
+// Logical operations
+
+type ExprLogicalNot struct {
+	Operand Expr
+}
+type ExprLogicalAnd struct {
+	Lhs Expr
+	Rhs Expr
+}
+type ExprLogicalOr struct {
+	Lhs Expr
+	Rhs Expr
+}
+
+func (e ExprLogicalNot) isExpr() {}
+func (e ExprLogicalAnd) isExpr() {}
+func (e ExprLogicalOr) isExpr()  {}
+
+// Other
 
 type ExprVariable string
 
@@ -57,3 +98,11 @@ type ExprMonetaryNew struct {
 }
 
 func (e ExprMonetaryNew) isExpr() {}
+
+type ExprTernary struct {
+	Cond    Expr
+	IfTrue  Expr
+	IfFalse Expr
+}
+
+func (e ExprTernary) isExpr() {}

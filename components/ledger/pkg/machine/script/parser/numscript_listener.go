@@ -35,14 +35,32 @@ type NumScriptListener interface {
 	// EnterExprAddSub is called when entering the ExprAddSub production.
 	EnterExprAddSub(c *ExprAddSubContext)
 
+	// EnterExprTernary is called when entering the ExprTernary production.
+	EnterExprTernary(c *ExprTernaryContext)
+
+	// EnterExprLogicalNot is called when entering the ExprLogicalNot production.
+	EnterExprLogicalNot(c *ExprLogicalNotContext)
+
+	// EnterExprArithmeticCondition is called when entering the ExprArithmeticCondition production.
+	EnterExprArithmeticCondition(c *ExprArithmeticConditionContext)
+
 	// EnterExprLiteral is called when entering the ExprLiteral production.
 	EnterExprLiteral(c *ExprLiteralContext)
+
+	// EnterExprLogicalOr is called when entering the ExprLogicalOr production.
+	EnterExprLogicalOr(c *ExprLogicalOrContext)
 
 	// EnterExprVariable is called when entering the ExprVariable production.
 	EnterExprVariable(c *ExprVariableContext)
 
 	// EnterExprMonetaryNew is called when entering the ExprMonetaryNew production.
 	EnterExprMonetaryNew(c *ExprMonetaryNewContext)
+
+	// EnterExprEnclosed is called when entering the ExprEnclosed production.
+	EnterExprEnclosed(c *ExprEnclosedContext)
+
+	// EnterExprLogicalAnd is called when entering the ExprLogicalAnd production.
+	EnterExprLogicalAnd(c *ExprLogicalAndContext)
 
 	// EnterAllotmentPortionConst is called when entering the AllotmentPortionConst production.
 	EnterAllotmentPortionConst(c *AllotmentPortionConstContext)
@@ -173,14 +191,32 @@ type NumScriptListener interface {
 	// ExitExprAddSub is called when exiting the ExprAddSub production.
 	ExitExprAddSub(c *ExprAddSubContext)
 
+	// ExitExprTernary is called when exiting the ExprTernary production.
+	ExitExprTernary(c *ExprTernaryContext)
+
+	// ExitExprLogicalNot is called when exiting the ExprLogicalNot production.
+	ExitExprLogicalNot(c *ExprLogicalNotContext)
+
+	// ExitExprArithmeticCondition is called when exiting the ExprArithmeticCondition production.
+	ExitExprArithmeticCondition(c *ExprArithmeticConditionContext)
+
 	// ExitExprLiteral is called when exiting the ExprLiteral production.
 	ExitExprLiteral(c *ExprLiteralContext)
+
+	// ExitExprLogicalOr is called when exiting the ExprLogicalOr production.
+	ExitExprLogicalOr(c *ExprLogicalOrContext)
 
 	// ExitExprVariable is called when exiting the ExprVariable production.
 	ExitExprVariable(c *ExprVariableContext)
 
 	// ExitExprMonetaryNew is called when exiting the ExprMonetaryNew production.
 	ExitExprMonetaryNew(c *ExprMonetaryNewContext)
+
+	// ExitExprEnclosed is called when exiting the ExprEnclosed production.
+	ExitExprEnclosed(c *ExprEnclosedContext)
+
+	// ExitExprLogicalAnd is called when exiting the ExprLogicalAnd production.
+	ExitExprLogicalAnd(c *ExprLogicalAndContext)
 
 	// ExitAllotmentPortionConst is called when exiting the AllotmentPortionConst production.
 	ExitAllotmentPortionConst(c *AllotmentPortionConstContext)

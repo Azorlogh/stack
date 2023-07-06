@@ -592,6 +592,57 @@ func (m *Machine) Eval(expr program.Expr) (internal.Value, error) {
 			return nil, errors.New(InternalError)
 		}
 
+	case program.ExprNumberCondition:
+		lhs, err := EvalAs[internal.Number](m, expr.Lhs)
+		if err != nil {
+			return nil, err
+		}
+		rhs, err := EvalAs[internal.Number](m, expr.Rhs)
+		if err != nil {
+			return nil, err
+		}
+		switch expr.Op {
+		case program.OP_EQ:
+			return internal.Bool((*lhs).Eq(*rhs)), nil
+		case program.OP_NEQ:
+			return internal.Bool(!(*lhs).Eq(*rhs)), nil
+		case program.OP_LT:
+			return internal.Bool((*lhs).Lt(*rhs)), nil
+		case program.OP_LTE:
+			return internal.Bool((*lhs).Lte(*rhs)), nil
+		case program.OP_GT:
+			return internal.Bool((*lhs).Gt(*rhs)), nil
+		case program.OP_GTE:
+			return internal.Bool((*lhs).Gte(*rhs)), nil
+		}
+
+	case program.ExprLogicalNot:
+		operand, err := EvalAs[internal.Bool](m, expr.Operand)
+		if err != nil {
+			return nil, err
+		}
+		return internal.Bool(!bool(*operand)), nil
+	case program.ExprLogicalAnd:
+		lhs, err := EvalAs[internal.Bool](m, expr.Lhs)
+		if err != nil {
+			return nil, err
+		}
+		rhs, err := EvalAs[internal.Bool](m, expr.Rhs)
+		if err != nil {
+			return nil, err
+		}
+		return internal.Bool(bool(*lhs) && bool(*rhs)), nil
+	case program.ExprLogicalOr:
+		lhs, err := EvalAs[internal.Bool](m, expr.Lhs)
+		if err != nil {
+			return nil, err
+		}
+		rhs, err := EvalAs[internal.Bool](m, expr.Rhs)
+		if err != nil {
+			return nil, err
+		}
+		return internal.Bool(bool(*lhs) || bool(*rhs)), nil
+
 	case program.ExprMonetaryNew:
 		asset, err := EvalAs[internal.Asset](m, expr.Asset)
 		if err != nil {
@@ -630,6 +681,16 @@ func (m *Machine) Eval(expr program.Expr) (internal.Value, error) {
 			panic("oops infinite money")
 		}
 		return *funding, nil
+	case program.ExprTernary:
+		cond, err := EvalAs[internal.Bool](m, expr.Cond)
+		if err != nil {
+			return nil, err
+		}
+		if bool(*cond) {
+			return m.Eval(expr.IfTrue)
+		} else {
+			return m.Eval(expr.IfFalse)
+		}
 	}
 	return nil, errors.New(InternalError)
 }

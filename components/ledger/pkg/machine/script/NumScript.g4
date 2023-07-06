@@ -20,6 +20,16 @@ TO: 'to';
 ALLOCATE: 'allocate';
 OP_ADD: '+';
 OP_SUB: '-';
+OP_EQ: '==';
+OP_NEQ: '!=';
+OP_LT: '<';
+OP_LTE: '<=';
+OP_GT: '>';
+OP_GTE: '>=';
+OP_NOT: '!';
+OP_AND: '&&';
+OP_OR: '||';
+
 LPAREN: '(';
 RPAREN: ')';
 LBRACK: '[';
@@ -27,12 +37,14 @@ RBRACK: ']';
 LBRACE: '{';
 RBRACE: '}';
 EQ: '=';
+
 TY_ACCOUNT: 'account';
 TY_ASSET: 'asset';
 TY_NUMBER: 'number';
 TY_MONETARY: 'monetary';
 TY_PORTION: 'portion';
 TY_STRING: 'string';
+TY_BOOL: 'bool';
 STRING: '"' [a-zA-Z0-9_\- ]* '"';
 PORTION:
     ( [0-9]+ [ ]? '/' [ ]? [0-9]+
@@ -63,10 +75,16 @@ literal
 variable: VARIABLE_NAME;
 
 expression
-    : lhs=expression op=(OP_ADD|OP_SUB) rhs=expression # ExprAddSub
+    : lhs=expression op=(OP_ADD | OP_SUB) rhs=expression # ExprAddSub
+    | lhs=expression op=(OP_EQ | OP_NEQ | OP_LT | OP_LTE | OP_GT | OP_GTE) rhs=expression # ExprArithmeticCondition
+    | OP_NOT lhs=expression # ExprLogicalNot
+    | lhs=expression op=OP_AND rhs=expression # ExprLogicalAnd
+    |lhs=expression op=OP_OR rhs=expression # ExprLogicalOr
     | lit=literal # ExprLiteral
     | var_=variable # ExprVariable
     | mon=monetary # ExprMonetaryNew
+    | cond=expression '?' ifTrue=expression ':' ifFalse=expression # ExprTernary
+    | LPAREN expr=expression RPAREN # ExprEnclosed
     ;
 
 allotmentPortion
@@ -152,6 +170,7 @@ type_
     | TY_STRING
     | TY_MONETARY
     | TY_PORTION
+    | TY_BOOL
     ;
 
 origin

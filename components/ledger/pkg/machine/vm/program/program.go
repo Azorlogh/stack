@@ -3,92 +3,9 @@ package program
 import (
 	"fmt"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/formancehq/ledger/pkg/machine/internal"
 )
-
-type Overdraft struct {
-	Unbounded bool
-	UpTo      *Expr // invariant: if unbounbed then up_to == nil
-}
-
-type Source interface {
-	isSource()
-}
-
-type SourceAccount struct {
-	Account   Expr
-	Overdraft *Overdraft
-}
-
-func (s SourceAccount) isSource() {}
-
-type SourceMaxed struct {
-	Source Source
-	Max    Expr
-}
-
-func (s SourceMaxed) isSource() {}
-
-type SourceInOrder []Source
-
-func (s SourceInOrder) isSource() {}
-
-// invariant: if remaining then expr == nil
-type AllotmentPortion struct {
-	Expr      Expr
-	Remaining bool
-}
-
-type ValueAwareSource interface {
-	isValueAwareSource()
-}
-
-type ValueAwareSourceSource struct {
-	Source Source
-}
-
-func (v ValueAwareSourceSource) isValueAwareSource() {}
-
-type ValueAwareSourcePart struct {
-	Portion AllotmentPortion
-	Source  Source
-}
-type ValueAwareSourceAllotment []ValueAwareSourcePart
-
-func (v ValueAwareSourceAllotment) isValueAwareSource() {}
-
-type KeptOrDestination struct {
-	Kept        bool
-	Destination Destination
-}
-
-type Destination interface {
-	isDestination()
-}
-
-type DestinationAccount struct{ Expr Expr }
-
-func (d DestinationAccount) isDestination() {}
-
-type DestinationInOrderPart struct {
-	Max Expr
-	Kod KeptOrDestination
-}
-
-type DestinationInOrder struct {
-	Parts     []DestinationInOrderPart
-	Remaining KeptOrDestination
-}
-
-func (d DestinationInOrder) isDestination() {}
-
-type DestinationAllotmentPart struct {
-	Portion AllotmentPortion
-	Kod     KeptOrDestination
-}
-type DestinationAllotment []DestinationAllotmentPart
-
-func (d DestinationAllotment) isDestination() {}
 
 type Instruction interface {
 	isInstruction()
@@ -165,6 +82,15 @@ type VarDecl struct {
 type Program struct {
 	VarsDecl    []VarDecl
 	Instruction []Instruction
+}
+
+func (p *Program) String() string {
+	cfg := spew.NewDefaultConfig()
+	cfg.Indent = "    "
+	cfg.DisablePointerAddresses = true
+	cfg.DisableMethods = true
+	cfg.DisableCapacities = true
+	return cfg.Sdump(p)
 }
 
 // func (p *Program) ParseVariables(vars map[string]internal.Value) (map[string]internal.Value, error) {

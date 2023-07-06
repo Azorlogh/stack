@@ -547,7 +547,7 @@ func (m *Machine) Eval(expr program.Expr) (internal.Value, error) {
 	switch expr := expr.(type) {
 	case program.ExprLiteral:
 		return expr.Value, nil
-	case program.ExprNumberAdd:
+	case program.ExprNumberOperation:
 		lhs, err := EvalAs[internal.Number](m, expr.Lhs)
 		if err != nil {
 			return nil, err
@@ -556,17 +556,41 @@ func (m *Machine) Eval(expr program.Expr) (internal.Value, error) {
 		if err != nil {
 			return nil, err
 		}
-		return (*lhs).Add(*rhs), nil
-	case program.ExprNumberSub:
-		lhs, err := EvalAs[internal.Number](m, expr.Lhs)
+		switch expr.Op {
+		case program.OP_ADD:
+			return (*lhs).Add(*rhs), nil
+		case program.OP_SUB:
+			return (*lhs).Sub(*rhs), nil
+		default:
+			return nil, errors.New(InternalError)
+		}
+
+	case program.ExprMonetaryOperation:
+		lhs, err := EvalAs[internal.Monetary](m, expr.Lhs)
 		if err != nil {
 			return nil, err
 		}
-		rhs, err := EvalAs[internal.Number](m, expr.Rhs)
+		rhs, err := EvalAs[internal.Monetary](m, expr.Rhs)
 		if err != nil {
 			return nil, err
 		}
-		return (*lhs).Sub(*rhs), nil
+		if lhs.Asset != rhs.Asset {
+			return nil, errors.New("mismatching assets")
+		}
+		switch expr.Op {
+		case program.OP_ADD:
+			return internal.Monetary{
+				Asset:  lhs.Asset,
+				Amount: lhs.Amount.Add(rhs.Amount),
+			}, nil
+		case program.OP_SUB:
+			return internal.Monetary{
+				Asset:  lhs.Asset,
+				Amount: lhs.Amount.Sub(rhs.Amount),
+			}, nil
+		default:
+			return nil, errors.New(InternalError)
+		}
 
 	case program.ExprNumberCondition:
 		lhs, err := EvalAs[internal.Number](m, expr.Lhs)
@@ -619,38 +643,6 @@ func (m *Machine) Eval(expr program.Expr) (internal.Value, error) {
 		}
 		return internal.Bool(bool(*lhs) || bool(*rhs)), nil
 
-	case program.ExprMonetaryAdd:
-		lhs, err := EvalAs[internal.Monetary](m, expr.Lhs)
-		if err != nil {
-			return nil, err
-		}
-		rhs, err := EvalAs[internal.Monetary](m, expr.Rhs)
-		if err != nil {
-			return nil, err
-		}
-		if lhs.Asset != rhs.Asset {
-			return nil, errors.New("mismatching assets")
-		}
-		return internal.Monetary{
-			Asset:  lhs.Asset,
-			Amount: lhs.Amount.Add(rhs.Amount),
-		}, nil
-	case program.ExprMonetarySub:
-		lhs, err := EvalAs[internal.Monetary](m, expr.Lhs)
-		if err != nil {
-			return nil, err
-		}
-		rhs, err := EvalAs[internal.Monetary](m, expr.Rhs)
-		if err != nil {
-			return nil, err
-		}
-		if lhs.Asset != rhs.Asset {
-			return nil, errors.New("mismatching assets")
-		}
-		return internal.Monetary{
-			Asset:  lhs.Asset,
-			Amount: lhs.Amount.Add(rhs.Amount),
-		}, nil
 	case program.ExprMonetaryNew:
 		asset, err := EvalAs[internal.Asset](m, expr.Asset)
 		if err != nil {

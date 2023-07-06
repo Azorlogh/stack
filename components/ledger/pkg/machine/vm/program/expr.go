@@ -28,33 +28,21 @@ func (e ExprLiteral) isExpr() {}
 
 // Arithmetic
 
-type ExprNumberAdd struct {
+type ExprNumberOperation struct {
+	Op  byte
 	Lhs Expr
 	Rhs Expr
 }
 
-func (e ExprNumberAdd) isExpr() {}
+func (e ExprNumberOperation) isExpr() {}
 
-type ExprNumberSub struct {
+type ExprMonetaryOperation struct {
+	Op  byte
 	Lhs Expr
 	Rhs Expr
 }
 
-func (e ExprNumberSub) isExpr() {}
-
-type ExprMonetaryAdd struct {
-	Lhs Expr
-	Rhs Expr
-}
-
-func (e ExprMonetaryAdd) isExpr() {}
-
-type ExprMonetarySub struct {
-	Lhs Expr
-	Rhs Expr
-}
-
-func (e ExprMonetarySub) isExpr() {}
+func (e ExprMonetaryOperation) isExpr() {}
 
 // Conditionals
 
